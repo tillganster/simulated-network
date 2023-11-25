@@ -42,7 +42,10 @@ nodes:
         node1
         node2
     command: ["/bin/bash","-c","--"]
-    args: [ "while true; do sleep 30; done;" ]
+    args: 
+     #- "echo hello" 
+      - "-c" 
+      - "python -u node.py -id 1 -g  /etc/config/graphviz.dot -p /etc/config/node_list -t 9999"
     env:
       - name: POSTGRES_HOST
         value: postgres-host

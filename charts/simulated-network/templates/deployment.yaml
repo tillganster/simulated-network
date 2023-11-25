@@ -35,9 +35,11 @@ spec:
           image: "{{ $root.Values.image.repository }}:{{ $root.Values.image.tag | default $root.Chart.AppVersion }}"
           imagePullPolicy: {{ $root.Values.image.pullPolicy }}
           command: 
-          {{toYaml .command |  nindent 12 }}
-          args: 
-          {{toYaml .args | nindent 12  }}
+          {{toYaml .command |   nindent 12  }}
+          args:
+          {{- range .args }}
+            - {{ . | quote}}
+          {{- end}} 
           env:
           {{- range .env }}
             - name: {{ .name | quote }}
