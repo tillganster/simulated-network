@@ -1,0 +1,10 @@
+{{- if .Values.configmap -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: network-config
+data:
+  {{range $filename,$content := .Values.configmap}}
+  {{$filename}}: {{$content | toYaml | indent 1}}
+  {{- end -}}
+{{- end -}}

@@ -1,0 +1,81 @@
+{{- $root := $ -}}
+{{- range  .Values.nodes }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+  labels:
+    {{- include "simulated-network.labels" $root | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "simulated-network.selectorLabels" $root | nindent 6 }}
+      app.kubernetes.io/name: {{ .name }}
+  template:
+    metadata:
+      {{- with $root.Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "simulated-network.selectorLabels" $root | nindent 8 }}
+        app.kubernetes.io/name: {{ .name }}
+    spec:
+      {{- with $root.Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml $root.Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .name }}
+          securityContext:
+            {{- toYaml $root.Values.securityContext | nindent 12 }}
+          image: "{{ $root.Values.image.repository }}:{{ $root.Values.image.tag | default $root.Chart.AppVersion }}"
+          imagePullPolicy: {{ $root.Values.image.pullPolicy }}
+          command: {{ .command }}
+          args: {{ .args }}
+          env:
+          {{- range .env }}
+            - name: {{ .name | quote }}
+              value: {{ .value | quote }}
+          {{- end }}
+          ports:
+            - name: {{printf "%s-%s" "http" .name}}
+              containerPort: 8080
+              protocol: TCP
+            - name: {{printf "%s-%s" "tcp" .name}}
+              containerPort: 8888
+              protocol: TCP
+          livenessProbe: 
+            {{toYaml $root.Values.livenessProbe  | nindent 12}}
+          readinessProbe:
+            {{toYaml $root.Values.readinessProbe  | nindent 12}}
+          resources:
+            {{- toYaml $root.Values.resources | nindent 12 }}
+          volumeMounts:
+          {{- with $root.Values.configmap }}
+          - name: configmap-volume
+            mountPath: /etc/config
+        {{- end -}}
+      {{- with $root.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $root.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $root.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      {{- with $root.Values.configmap }}     
+      - name: configmap-volume
+        configMap:
+          name: network-config
+      {{- end }}
+---
+{{- end -}}
