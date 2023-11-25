@@ -34,8 +34,10 @@ spec:
             {{- toYaml $root.Values.securityContext | nindent 12 }}
           image: "{{ $root.Values.image.repository }}:{{ $root.Values.image.tag | default $root.Chart.AppVersion }}"
           imagePullPolicy: {{ $root.Values.image.pullPolicy }}
-          command: {{ .command }}
-          args: {{ .args }}
+          command: 
+          {{toYaml .command |  nindent 12 }}
+          args: 
+          {{toYaml .args | nindent 12  }}
           env:
           {{- range .env }}
             - name: {{ .name | quote }}
@@ -51,7 +53,7 @@ spec:
           livenessProbe: 
             {{toYaml $root.Values.livenessProbe  | nindent 12}}
           readinessProbe:
-            {{toYaml $root.Values.readinessProbe  | nindent 12}}
+            {{toYaml $root.Values.readi  | nindent 12}}
           resources:
             {{- toYaml $root.Values.resources | nindent 12 }}
           volumeMounts:

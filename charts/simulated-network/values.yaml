@@ -3,7 +3,8 @@ image:
   repository: ubuntu
   tag: latest
   pullPolicy: Always
-
+imagePullSecrets:
+  - name: image-pull-secret
 resources: {}
 configmap:
   graphivz.dot: |
