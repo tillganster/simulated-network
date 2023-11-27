@@ -1,4 +1,11 @@
 ---
+# Source: simulated-network/templates/job.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: start-job-sa
+automountServiceAccountToken: true
+---
 # Source: simulated-network/templates/configmap.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -21,13 +28,36 @@ data:
    3 node4:8888
    4 node4:8888
 ---
+# Source: simulated-network/templates/job.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: deployment-rw-cluster-role
+rules:
+- apiGroups: [""]
+  resources: ["deployments"]
+  verbs: ["get", "list"]
+---
+# Source: simulated-network/templates/job.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cluster-role-binding
+subjects:
+- kind: ServiceAccount
+  name: start-job-sa
+roleRef:
+  kind: ClusterRole
+  name: deployment-rw-cluster-role
+  apiGroup: rbac.authorization.k8s.io
+---
 # Source: simulated-network/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: node2
   labels:
-    helm.sh/chart: simulated-network-0.3.0
+    helm.sh/chart: simulated-network-0.5.0
     app.kubernetes.io/instance: test
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
@@ -50,7 +80,7 @@ kind: Service
 metadata:
   name: node1
   labels:
-    helm.sh/chart: simulated-network-0.3.0
+    helm.sh/chart: simulated-network-0.5.0
     app.kubernetes.io/instance: test
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
@@ -73,7 +103,7 @@ kind: Deployment
 metadata:
   name: node2
   labels:
-    helm.sh/chart: simulated-network-0.3.0
+    helm.sh/chart: simulated-network-0.5.0
     app.kubernetes.io/instance: test
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
@@ -142,7 +172,7 @@ kind: Deployment
 metadata:
   name: node1
   labels:
-    helm.sh/chart: simulated-network-0.3.0
+    helm.sh/chart: simulated-network-0.5.0
     app.kubernetes.io/instance: test
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
@@ -201,3 +231,24 @@ spec:
       - name: configmap-volume
         configMap:
           name: network-config
+---
+# Source: simulated-network/templates/job.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: start-job
+spec:
+  template:
+    spec:
+      serviceAccountName: start-job-sa
+      automountServiceAccountToken: true
+      containers:
+      - name: start-container
+        image: ubuntu:34
+        command: 
+          
+            - /bin/sh
+        args:
+            - "-c echo test" 
+      restartPolicy: Never
+  backoffLimit: 4

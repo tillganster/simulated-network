@@ -35,6 +35,12 @@ readinessProbe:
   initialDelaySeconds: 15
   periodSeconds: 10
 
+startUpJob:
+  image: ubuntu:34
+  command: ["/bin/sh"]
+  args:
+    - "-c echo test"
+
 nodes:
   - name: "node2"
     config: 
