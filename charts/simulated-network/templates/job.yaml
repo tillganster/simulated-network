@@ -42,6 +42,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: start-job-sa
+  namespace: {{$.Release.Namespace}}
 roleRef:
   kind: ClusterRole
   name: deployment-rw-cluster-role
