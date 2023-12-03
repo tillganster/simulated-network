@@ -3,6 +3,16 @@ entries:
   simulated-network:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2023-12-03T20:06:26.415098928Z"
+    description: A Helm chart for Kubernetes
+    digest: 59b934c63d4de926a7a64a4e9c71d82724577f3a9b878f95e5abdce475cae972
+    name: simulated-network
+    type: application
+    urls:
+    - https://github.com/tillganster/simulated-network/releases/download/simulated-network-0.7.0/simulated-network-0.7.0.tgz
+    version: 0.7.0
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2023-11-27T20:14:58.827882313Z"
     description: A Helm chart for Kubernetes
     digest: 422acc47ca25ebdeabf5f70e3abc8fe09860443c854938afbbb0017b81ae18fc
@@ -71,4 +81,4 @@ entries:
     urls:
     - https://github.com/tillganster/simulated-network/releases/download/simulated-network-0.1.0/simulated-network-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-27T20:14:58.827913682Z"
+generated: "2023-12-03T20:06:26.415129284Z"
