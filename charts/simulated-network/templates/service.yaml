@@ -17,6 +17,6 @@ spec:
       targetPort: {{printf "%s-%s" "tcp" .name}}
       name: tcp
   selector:
-    {{- include "simulated-network.selectorLabels" $root | nindent 4 }}
+    app.kubernetes.io/name: {{ .name }}
 ---
 {{- end -}}
