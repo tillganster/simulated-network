@@ -22,7 +22,6 @@ spec:
         {{- include "simulated-network.selectorLabels" $root | nindent 8 }}
         app.kubernetes.io/name: {{ .name }}
     spec:
-      restartPolicy: Never
       {{- with $root.Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
