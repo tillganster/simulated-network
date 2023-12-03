@@ -4,6 +4,7 @@ kind: Job
 metadata:
   name: start-job
 spec:
+  #ttlSecondsAfterFinished: 100
   template:
     spec:
       serviceAccountName: start-job-sa

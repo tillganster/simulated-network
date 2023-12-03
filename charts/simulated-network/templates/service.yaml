@@ -14,7 +14,7 @@ spec:
       protocol: TCP
       name: http
     - port: 8888
-      target: {{printf "%s-%s" "tcp" .name}}
+      targetPort: {{printf "%s-%s" "tcp" .name}}
       name: tcp
   selector:
     {{- include "simulated-network.selectorLabels" $root | nindent 4 }}
