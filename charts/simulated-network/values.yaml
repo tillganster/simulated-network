@@ -25,8 +25,8 @@ configmap:
     1 -- 3;
     2 -- 1;
     }
-  
-nodes: 
+
+nodeJobs: 
 
 - name: node1
   config: 
@@ -42,62 +42,78 @@ nodes:
     - name: POSTGRES_PORT
       value: 5432
 
-- name: node2
-  config: 
-  command: ["/bin/bash"]
-  args: 
-    #- "echo hello" 
-    - "-c" 
-    - "python -u node.py -id 2 -g  /etc/config/graphviz.dot -p /etc/config/node_list -t 54e67a29-b195-48ba-a238-439bf67dbae0"
-  # args: [ "while true; do sleep 30; done;" ]
-  env:
-    - name: POSTGRES_HOST
-      value: postgres-postgresql-hl.postgres.svc.cluster.local
-    - name: POSTGRES_PORT
-      value: 5432
+# nodes: 
 
-- name: node3
-  config: 
-  command: ["/bin/bash"]
-  args: 
-    #- "echo hello" 
-    - "-c" 
-    - "python -u node.py -id 3 -g  /etc/config/graphviz.dot -p /etc/config/node_list -t 54e67a29-b195-48ba-a238-439bf67dbae0"
-  # args: [ "while true; do sleep 30; done;" ]
-  env:
-    - name: POSTGRES_HOST
-      value: postgres-postgresql-hl.postgres.svc.cluster.local
-    - name: POSTGRES_PORT
-      value: 5432
+# - name: node1
+#   config: 
+#   command: ["/bin/bash"]
+#   args: 
+#     #- "echo hello" 
+#     - "-c" 
+#     - "python -u node.py -id 1 -g  /etc/config/graphviz.dot -p /etc/config/node_list -t 54e67a29-b195-48ba-a238-439bf67dbae0"
+#   # args: [ "while true; do sleep 30; done;" ]
+#   env:
+#     - name: POSTGRES_HOST
+#       value: postgres-postgresql-hl.postgres.svc.cluster.local
+#     - name: POSTGRES_PORT
+#       value: 5432
 
-# imagePullSecrets:
+# - name: node2
+#   config: 
+#   command: ["/bin/bash"]
+#   args: 
+#     #- "echo hello" 
+#     - "-c" 
+#     - "python -u node.py -id 2 -g  /etc/config/graphviz.dot -p /etc/config/node_list -t 54e67a29-b195-48ba-a238-439bf67dbae0"
+#   # args: [ "while true; do sleep 30; done;" ]
+#   env:
+#     - name: POSTGRES_HOST
+#       value: postgres-postgresql-hl.postgres.svc.cluster.local
+#     - name: POSTGRES_PORT
+#       value: 5432
+
+# - name: node3
+#   config: 
+#   command: ["/bin/bash"]
+#   args: 
+#     #- "echo hello" 
+#     - "-c" 
+#     - "python -u node.py -id 3 -g  /etc/config/graphviz.dot -p /etc/config/node_list -t 54e67a29-b195-48ba-a238-439bf67dbae0"
+#   # args: [ "while true; do sleep 30; done;" ]
+#   env:
+#     - name: POSTGRES_HOST
+#       value: postgres-postgresql-hl.postgres.svc.cluster.local
+#     - name: POSTGRES_PORT
+#       value: 5432
+
+# # imagePullSecrets:
 
 
-startUpJob:
-  image: ganstertill/kubectl
-  command: ["sh"]
-  args:
-    - "-c"
-    - |
-     (
-     namespace=simulated-network
+# startUpJob:
+#   image: ganstertill/kubectl
+#   command: ["sh"]
+#   args:
+#     - "-c"
+#     - |
+#      (
+#      namespace=simulated-network
     
-     kubectl config set-cluster my-cluster --server=https://kubernetes.default.svc.cluster.local --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-     kubectl config set-credentials my-user --token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-     kubectl config set-context my-context --cluster=my-cluster --user=my-user --namespace=$namespace
+#      kubectl config set-cluster my-cluster --server=https://kubernetes.default.svc.cluster.local --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+#      kubectl config set-credentials my-user --token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+#      kubectl config set-context my-context --cluster=my-cluster --user=my-user --namespace=$namespace
 
-      kubectl config use-context my-context
+#       kubectl config use-context my-context
 
-      while true; do
-        podsReady=$(kubectl get pods -n $namespace -o json | jq '.items | map(.status.containerStatuses[]) | flatten | all(.ready and .started and (.state | has("running")))' -r)
-        if [ "true" = "$podsReady" ]; then
-          echo "All deployments are ready!"
-          break
-        else
-          echo "Deployments not ready yet. Waiting..."
-          sleep 6
-        fi
-      done
+#       while true; do
+#         podsReady=$(kubectl get pods -n $namespace -o json | jq '.items | map(.status.containerStatuses[]) | flatten | all(.ready and .started and (.state | has("running")))' -r)
+#         if [ "true" = "$podsReady" ]; then
+#           echo "All deployments are ready!"
+#           break
+#         else
+#           echo "Deployments not ready yet. Waiting..."
+#           sleep 6
+#         fi
+#       done
 
-      echo '{ "type": "START_MYTH", "payload": "Hunde sind Tiere."}' | nc node1 8888   
-      )
+#       echo '{ "type": "START_MYTH", "payload": "Hunde sind Tiere."}' | nc node1 8888   
+#       )

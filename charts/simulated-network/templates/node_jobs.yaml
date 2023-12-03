@@ -1,13 +1,13 @@
 {{- $root := $ -}}
-{{- range  .Values.nodes }}
-apiVersion: apps/v1
-kind: Deployment
+{{- range  .Values.nodeJobs }}
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: {{ .name }}
   labels:
     {{- include "simulated-network.labels" $root | nindent 4 }}
 spec:
-  replicas: 1
+  manualSelector: true
   selector:
     matchLabels:
       {{- include "simulated-network.selectorLabels" $root | nindent 6 }}
@@ -22,7 +22,7 @@ spec:
         {{- include "simulated-network.selectorLabels" $root | nindent 8 }}
         app.kubernetes.io/name: {{ .name }}
     spec:
-      restartPolicy: Never
+      restartPolicy: OnFailure
       {{- with $root.Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
