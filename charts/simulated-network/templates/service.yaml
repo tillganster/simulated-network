@@ -1,5 +1,5 @@
 {{- $root := $ -}}
-{{- $nodes := default .Values.nodes .Values.nodeJobs }}
+{{- $nodes := default  .Values.nodeJobs .Values.nodes }}
 {{- range  $nodes }}
 apiVersion: v1
 kind: Service
