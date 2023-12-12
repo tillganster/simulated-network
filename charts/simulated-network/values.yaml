@@ -26,21 +26,21 @@ configmap:
     2 -- 1;
     }
 
-# nodeJobs: 
+nodeJobs: 
 
-# - name: node1
-#   config: 
-#   command: ["/bin/bash"]
-#   args: 
-#     #- "echo hello" 
-#     - "-c" 
-#     - "python -u node.py -id 1 -g  /etc/config/graphviz.dot -p /etc/config/node_list -t 54e67a29-b195-48ba-a238-439bf67dbae0"
-#   # args: [ "while true; do sleep 30; done;" ]
-#   env:
-#     - name: POSTGRES_HOST
-#       value: postgres-postgresql-hl.postgres.svc.cluster.local
-#     - name: POSTGRES_PORT
-#       value: 5432
+- name: node1
+  config: 
+  command: ["/bin/bash"]
+  args: 
+    #- "echo hello" 
+    - "-c" 
+    - "python -u node.py -id 1 -g  /etc/config/graphviz.dot -p /etc/config/node_list -t 54e67a29-b195-48ba-a238-439bf67dbae0"
+  # args: [ "while true; do sleep 30; done;" ]
+  env:
+    - name: POSTGRES_HOST
+      value: postgres-postgresql-hl.postgres.svc.cluster.local
+    - name: POSTGRES_PORT
+      value: 5432
 
 # nodes: 
 

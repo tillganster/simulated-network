@@ -22,6 +22,8 @@ spec:
         {{- include "simulated-network.selectorLabels" $root | nindent 8 }}
         app.kubernetes.io/name: {{ .name }}
     spec:
+      serviceAccountName: {{include "simulated-network.fullname" $root}}
+      automountServiceAccountToken: true
       restartPolicy: OnFailure
       {{- with $root.Values.imagePullSecrets }}
       imagePullSecrets:
